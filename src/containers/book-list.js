@@ -1,27 +1,40 @@
-import React,{Compoment} from 'react';
-import {connect} from 'react-redux';
-
-class BookList extends Compoment{
-    renderList(){
-        return this.props.books.map((book)=>{
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { selectBook } from '../actions/index';
+import { bindActionCreators } from 'redux';
+//this aware of state so it is a container
+class BookList extends Component{
+    renderList() {
+        return this.props.books.map((book) => {
             return(
-                <li key={book.title} className="list-group-item">{book.title}</li>
+                <li 
+                    onClick={()=>this.props.selectBook(book)}
+                    key={book.title} 
+                    className="list-group-item">
+                    {book.title}
+                </li>
             )
-        });
+        })
     }
-    render(){
+
+    render() {
         return(
             <ul className="list-group col-sm-4">
-                {this.renderList()};
+                {this.renderList()}
             </ul>                
         );
     }
 };
 
 function mapStateToProps(state){
+    // parameter state pass from reducers index.js
     return{
-        book: state.books
+        books: state.books
     };
 }
 
-export default connect(mapStateToProps)(BookList);
+function mapDispatchToProps(dispatch){
+    return bindActionCreators({selectBook:selectBook},dispatch);
+}
+
+export default connect(mapStateToProps,mapDispatchToProps)(BookList);
